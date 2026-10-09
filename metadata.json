@@ -1,0 +1,6 @@
+{
+  "name": "HomeDecor Buyer Finder",
+  "description": "Discover US-based home decor retailers, wholesalers, and interior design boutiques, scrape verified public business emails, and manage personalized outreach campaigns.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
