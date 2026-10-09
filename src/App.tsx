@@ -10,8 +10,6 @@ import { SearchHistoryView } from './components/SearchHistoryView';
 import { ApiSettingsView } from './components/ApiSettingsView';
 import { BuyerDetailsModal } from './components/BuyerDetailsModal';
 import { ComposeEmailModal } from './components/ComposeEmailModal';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-import { googleSignIn } from './services/googleAuth';
 import {
   Buyer,
   EmailRecord,
@@ -93,20 +91,6 @@ export default function App() {
     setCurrentTab('find-buyers');
   };
 
-  const [isConnectingGoogle, setIsConnectingGoogle] = useState(false);
-
-  const handleReconnectGmail = async () => {
-    setIsConnectingGoogle(true);
-    try {
-      await googleSignIn();
-      await refreshAllData(true);
-    } catch (err: any) {
-      console.error('Reconnect failed:', err);
-    } finally {
-      setIsConnectingGoogle(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex font-sans antialiased">
       {/* Sidebar Navigation */}
@@ -128,27 +112,6 @@ export default function App() {
           onRefresh={() => refreshAllData(true)}
           isRefreshing={isRefreshing}
         />
-
-        {/* Global Urgent Gmail Reconnect Warning Banner */}
-        {integrationsStatus?.gmail?.connected &&
-          (integrationsStatus.gmail.tokenExpired || !integrationsStatus.gmail.hasRefreshToken) && (
-            <div className="bg-amber-600 text-white px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-medium shadow-xs">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 shrink-0 text-amber-100" />
-                <span>
-                  <strong>Gmail authorization expired for pariaastha672@gmail.com.</strong> Reconnect Gmail to grant offline refresh permissions and restore outbound email delivery.
-                </span>
-              </div>
-              <button
-                onClick={handleReconnectGmail}
-                disabled={isConnectingGoogle}
-                className="px-3 py-1 bg-white hover:bg-amber-50 text-amber-900 font-bold rounded-lg transition-colors shrink-0 shadow-xs flex items-center gap-1.5"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${isConnectingGoogle ? 'animate-spin' : ''}`} />
-                <span>{isConnectingGoogle ? 'Opening Google...' : 'Reconnect Gmail'}</span>
-              </button>
-            </div>
-          )}
 
         {/* Tab Content Router */}
         <main className="flex-1 pb-16">

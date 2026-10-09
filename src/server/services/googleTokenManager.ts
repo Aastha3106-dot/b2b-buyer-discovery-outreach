@@ -19,8 +19,15 @@ export interface GetTokenResult {
   code?: 'AUTH_REQUIRED' | 'AUTH_EXPIRED' | 'NETWORK_ERROR' | 'INVALID_GRANT';
 }
 
-const OAUTH_CLIENT_ID = firebaseConfig.oAuthClientId;
-const FIREBASE_API_KEY = firebaseConfig.apiKey;
+const OAUTH_CLIENT_ID =
+  process.env.GOOGLE_OAUTH_CLIENT_ID ||
+  process.env.VITE_FIREBASE_OAUTH_CLIENT_ID ||
+  firebaseConfig.oAuthClientId;
+
+const FIREBASE_API_KEY =
+  process.env.FIREBASE_API_KEY ||
+  process.env.VITE_FIREBASE_API_KEY ||
+  firebaseConfig.apiKey;
 
 /**
  * Retrieves the stored Gmail credentials and token status from the server database

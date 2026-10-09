@@ -124,7 +124,18 @@ export async function getDatabase(): Promise<DatabaseSchema> {
     };
     return cachedDb;
   } catch (err) {
-    cachedDb = { ...INITIAL_DB };
+    try {
+      const exampleRaw = await fs.readFile(path.resolve(DATA_DIR, 'db.example.json'), 'utf-8');
+      const parsedExample = JSON.parse(exampleRaw);
+      cachedDb = {
+        buyers: Array.isArray(parsedExample.buyers) ? parsedExample.buyers : [],
+        search_history: Array.isArray(parsedExample.search_history) ? parsedExample.search_history : [],
+        email_history: Array.isArray(parsedExample.email_history) ? parsedExample.email_history : [],
+        settings: parsedExample.settings || {},
+      };
+    } catch {
+      cachedDb = { ...INITIAL_DB };
+    }
     await saveDatabase(cachedDb);
     return cachedDb;
   }

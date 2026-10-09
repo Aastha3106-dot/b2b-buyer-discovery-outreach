@@ -9,7 +9,15 @@ import {
 } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const effectiveFirebaseConfig = {
+  ...firebaseConfig,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || firebaseConfig.authDomain,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || firebaseConfig.projectId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || firebaseConfig.appId,
+};
+
+const app = getApps().length > 0 ? getApp() : initializeApp(effectiveFirebaseConfig);
 export const auth = getAuth(app);
 
 const provider = new GoogleAuthProvider();
